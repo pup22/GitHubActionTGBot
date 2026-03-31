@@ -98,7 +98,8 @@ def send_message(message):
     params = {
         'chat_id': TELEGRAM_CHANNEL_ID,
         'text': f'{message}',
-        'parse_mode': 'HTML'
+        'parse_mode': 'HTML',
+        'disable_notification': True
     }
     res = requests.post(url, params=params)
     res.raise_for_status()
