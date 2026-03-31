@@ -1,0 +1,6 @@
+venv/
+.env
+
+.cache.sqlite
+app_old.py
+README.md
