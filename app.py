@@ -95,13 +95,13 @@ def get_weather():
 def send_message(message):
     url = f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage'
 
-    params = {
+    payload = {
         'chat_id': TELEGRAM_CHANNEL_ID,
-        'text': f'{message}',
+        'text': message,
         'parse_mode': 'HTML',
         'disable_notification': True
     }
-    res = requests.post(url, params=params)
+    res = requests.post(url, json=payload) 
     res.raise_for_status()
 
     return res.json()
