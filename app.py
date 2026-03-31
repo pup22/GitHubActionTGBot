@@ -87,7 +87,7 @@ def get_weather():
         f"🌅 <b>Восход:</b> {format_unix_time(daily_sunrise[0])} 🌇 <b>Закат:</b> {format_unix_time(daily_sunset[0])}\n"
         
         f"🕒 <i>Данные на: {datetime.fromtimestamp(current.Time()).strftime('%H:%M:%S')}</i>"
-    )
+    ).strip()
 
     print(f"Погода\n\n{message}")
     return message
