@@ -102,6 +102,13 @@ def send_message(message):
         'disable_notification': True
     }
     res = requests.post(url, json=payload) 
+    
+    # ЕСЛИ ОШИБКА — ПЕЧАТАЕМ ТОЧНЫЙ ОТВЕТ ОТ ТЕЛЕГРАМ
+    if not res.ok:
+        print(f"\n--- ОШИБКА ОТ TELEGRAM ---")
+        print(f"Отправленный chat_id: '{TELEGRAM_CHANNEL_ID}'")
+        print(f"Ответ API: {res.text}\n--------------------------\n")
+        
     res.raise_for_status()
 
     return res.json()
