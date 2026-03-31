@@ -10,7 +10,7 @@ load_dotenv()
 LATITUDE = os.getenv('LATITUDE')
 LONGITUDE = os.getenv('LONGITUDE')
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_TOKEN')
-TELEGRAM_CHANNEL_ID = os.getenv('TELEGRAM_CHAT_ID')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
 def get_weather():
     # Setup the Open-Meteo API client with cache and retry on error
@@ -96,7 +96,7 @@ def send_message(message):
     url = f'https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage'
 
     payload = {
-        'chat_id': TELEGRAM_CHANNEL_ID,
+        'chat_id': TELEGRAM_CHAT_ID,
         'text': message,
         'parse_mode': 'HTML',
         'disable_notification': True
