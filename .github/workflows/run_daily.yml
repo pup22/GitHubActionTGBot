@@ -10,7 +10,7 @@ env:
     LATITUDE: ${{ secrets.LATITUDE }}
     LONGITUDE: ${{ secrets.LONGITUDE }}
     TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-    TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+    TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
 jobs:
     Daily-Run:
