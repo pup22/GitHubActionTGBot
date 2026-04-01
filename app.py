@@ -5,6 +5,7 @@ import openmeteo_requests
 import requests_cache
 import pandas as pd
 from retry_requests import retry
+from datetime import datetime, timezone, timedelta
 
 load_dotenv()
 LATITUDE = os.getenv('LATITUDE')
@@ -33,6 +34,9 @@ def get_weather():
 
     # Process first location. Add a for-loop for multiple locations or weather models
     response = responses[0]
+    offset = response.UtcOffsetSeconds()
+    tz_kiev = timezone(timedelta(seconds=offset))
+
     print(f"Coordinates: {response.Latitude()}°N {response.Longitude()}°E")
     print(f"Elevation: {response.Elevation()} m asl")
     print(f"Timezone: {response.Timezone()}{response.TimezoneAbbreviation()}")
@@ -69,24 +73,19 @@ def get_weather():
     daily_dataframe = pd.DataFrame(data = daily_data)
     print("\nDaily data\n", daily_dataframe)
 
-
-    from datetime import datetime
-
     # Вспомогательная функция для форматирования времени из Unix Timestamp
     def format_unix_time(timestamp):
-        return datetime.fromtimestamp(timestamp).strftime('%H:%M')
+            # Создаем время в UTC и принудительно переводим в нужный часовой пояс
+            return datetime.fromtimestamp(timestamp, tz=timezone.utc).astimezone(tz_kiev).strftime('%H:%M')
 
     # Формируем текст сообщения
     message = (
         f"<b>🌍 Погода в Одессе</b>\n"
         # f"<i>Координаты: {response.Latitude():.2f}°N, {response.Longitude():.2f}°E</i>\n\n"
-        
         f"🌡 {current_temperature_2m:.1f}°C 💧 {current_relative_humidity_2m}%\n"
         f"💨 <b>Ветер:</b> {current_wind_speed_10m:.1f} км/ч, {current_wind_direction_10m:.0f}°\n"
-        # f"--- \n"
         f"🌅 <b>Восход:</b> {format_unix_time(daily_sunrise[0])} 🌇 <b>Закат:</b> {format_unix_time(daily_sunset[0])}\n"
-        
-        f"🕒 <i>Данные на: {datetime.fromtimestamp(current.Time()).strftime('%H:%M:%S')}</i>"
+        f"🕒 <i>Данные на: {format_unix_time(current.Time())}</i>"
     ).strip()
 
     print(f"Погода\n\n{message}")
