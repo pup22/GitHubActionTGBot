@@ -106,7 +106,7 @@ def send_message(message):
     # ЕСЛИ ОШИБКА — ПЕЧАТАЕМ ТОЧНЫЙ ОТВЕТ ОТ ТЕЛЕГРАМ
     if not res.ok:
         print(f"\n--- ОШИБКА ОТ TELEGRAM ---")
-        print(f"Отправленный chat_id: '{TELEGRAM_CHANNEL_ID}'")
+        print(f"Отправленный chat_id: '{TELEGRAM_CHAT_ID}'")
         print(f"Ответ API: {res.text}\n--------------------------\n")
         
     res.raise_for_status()
