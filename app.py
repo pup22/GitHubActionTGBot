@@ -13,6 +13,19 @@ LONGITUDE = os.getenv('LONGITUDE')
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_TOKEN')
 TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
 
+def get_usd_rate():
+    """Получает актуальный курс доллара от НБУ"""
+    try:
+        url = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=USD&json"
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        if data:
+            return data[0]['rate']
+    except Exception as e:
+        print(f"Ошибка при получении курса валют: {e}")
+    return None
+
 def get_weather():
     # Setup the Open-Meteo API client with cache and retry on error
     cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
@@ -73,19 +86,23 @@ def get_weather():
     daily_dataframe = pd.DataFrame(data = daily_data)
     print("\nDaily data\n", daily_dataframe)
 
+    # Получаем курс доллара
+    usd_rate = get_usd_rate()
+
     # Вспомогательная функция для форматирования времени из Unix Timestamp
     def format_unix_time(timestamp):
             # Создаем время в UTC и принудительно переводим в нужный часовой пояс
             return datetime.fromtimestamp(timestamp, tz=timezone.utc).astimezone(tz_kiev).strftime('%H:%M')
 
-    # Формируем текст сообщения
+    # Формируем текст сообщения 🌍
     message = (
-        f"<b>🌍 Погода в Одессе</b>\n"
+        f"<b>Погода в Одессе</b>\n"
         # f"<i>Координаты: {response.Latitude():.2f}°N, {response.Longitude():.2f}°E</i>\n\n"
         f"🌡 {current_temperature_2m:.1f}°C 💧 {current_relative_humidity_2m}%\n"
         f"💨 <b>Ветер:</b> {current_wind_speed_10m:.1f} км/ч, {current_wind_direction_10m:.0f}°\n"
         f"🌅 <b>Восход:</b> {format_unix_time(daily_sunrise[0])} 🌇 <b>Закат:</b> {format_unix_time(daily_sunset[0])}\n"
-        f"🕒 <i>Данные на: {format_unix_time(current.Time())}</i>"
+        # f"🕒 <i>Данные на: {format_unix_time(current.Time())}</i>\n"
+        f"💵 <b>Курс НБУ USD:</b> {usd_rate:.2f} грн\n" if usd_rate else ""
     ).strip()
 
     print(f"Погода\n\n{message}")
