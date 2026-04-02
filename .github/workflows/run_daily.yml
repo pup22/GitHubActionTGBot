@@ -4,7 +4,7 @@ on:
     # workflow_dispatch:
     push:
     schedule:
-        - cron: '0 5,16 * * *' # + 3 часа Украина, летнее время
+        - cron: '30 4,15 * * *' # + 3 часа Украина, летнее время
 
 env:
     LATITUDE: ${{ secrets.LATITUDE }}
